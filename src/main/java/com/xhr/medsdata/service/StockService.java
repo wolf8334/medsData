@@ -6,6 +6,8 @@ import com.xhr.medsdata.domain.StockView;
 import com.xhr.medsdata.dto.Requests.StockOpReq;
 import com.xhr.medsdata.repository.DrugRepository;
 import com.xhr.medsdata.repository.StockRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,8 @@ import java.util.List;
 
 @Service
 public class StockService {
+
+    private static final Logger opLog = LoggerFactory.getLogger("OPERATION");
 
     private static final BigDecimal ZERO = BigDecimal.ZERO;
 
@@ -85,6 +89,9 @@ public class StockService {
         }
         stockRepository.upsertQuantity(req.drugId(), after);
         stockRepository.insertLog(req.drugId(), change, before, after, type, req.remark());
+        opLog.info("库存变动: 类型={}, drugId={}, 变动={}, {} -> {}{}",
+                type, req.drugId(), change, before, after,
+                req.remark() == null || req.remark().isBlank() ? "" : ", 备注=" + req.remark());
         return stockRepository.findView(req.drugId())
                 .orElseThrow(() -> new BusinessException("药品不存在"));
     }
@@ -104,5 +111,8 @@ public class StockService {
         BigDecimal after = before.add(delta);
         stockRepository.upsertQuantity(drugId, after);
         stockRepository.insertLog(drugId, delta, before, after, changeType, remark);
+        opLog.info("库存变动: 类型={}, drugId={}, 变动={}, {} -> {}{}",
+                changeType, drugId, delta, before, after,
+                remark == null || remark.isBlank() ? "" : ", 备注=" + remark);
     }
 }

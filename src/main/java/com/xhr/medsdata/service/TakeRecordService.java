@@ -12,6 +12,8 @@ import com.xhr.medsdata.repository.DrugRepository;
 import com.xhr.medsdata.repository.PersonRepository;
 import com.xhr.medsdata.repository.PlanItemRepository;
 import com.xhr.medsdata.repository.TakeRecordRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,8 @@ import java.util.List;
 
 @Service
 public class TakeRecordService {
+
+    private static final Logger opLog = LoggerFactory.getLogger("OPERATION");
 
     private final TakeRecordRepository takeRecordRepository;
     private final PlanService planService;
@@ -63,6 +67,8 @@ public class TakeRecordService {
         LocalDateTime takenAt = req.takenAt() == null ? LocalDateTime.now().withNano(0) : req.takenAt();
         long id = takeRecordRepository.insert(req.personId(), plan.id(), takeDate, period.name(), takenAt, req.remark());
         adjustStock(plan.id(), period.name(), true, "服药自动扣减");
+        opLog.info("记录服药: id={}, personId={}, 日期={}, 时段={}, planId={}",
+                id, req.personId(), takeDate, period.name(), plan.id());
         return id;
     }
 
@@ -90,6 +96,8 @@ public class TakeRecordService {
         }
         takeRecordRepository.cancel(id);
         adjustStock(record.planId(), record.period(), false, "撤销服药回补");
+        opLog.info("撤销服药: id={}, personId={}, 日期={}, 时段={}",
+                id, record.personId(), record.takeDate(), record.period());
     }
 
     @Transactional
@@ -98,6 +106,7 @@ public class TakeRecordService {
         LocalDateTime takenAt = req == null || req.takenAt() == null ? record.takenAt() : req.takenAt();
         String remark = req == null || req.remark() == null ? record.remark() : req.remark();
         takeRecordRepository.update(id, takenAt, remark);
+        opLog.info("修改服药记录: id={}, 实际时间={}", id, takenAt);
     }
 
     /**
@@ -110,6 +119,8 @@ public class TakeRecordService {
         if ("TAKEN".equals(record.status())) {
             adjustStock(record.planId(), record.period(), false, "删除记录回补");
         }
+        opLog.info("删除服药记录: id={}, personId={}, 日期={}, 时段={}",
+                id, record.personId(), record.takeDate(), record.period());
     }
 
     /**

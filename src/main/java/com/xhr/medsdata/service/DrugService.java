@@ -4,12 +4,16 @@ import com.xhr.medsdata.common.BusinessException;
 import com.xhr.medsdata.domain.Drug;
 import com.xhr.medsdata.dto.Requests.DrugReq;
 import com.xhr.medsdata.repository.DrugRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class DrugService {
+
+    private static final Logger opLog = LoggerFactory.getLogger("OPERATION");
 
     private final DrugRepository drugRepository;
 
@@ -28,18 +32,23 @@ public class DrugService {
 
     public long create(DrugReq req) {
         validate(req);
-        return drugRepository.insert(req);
+        long id = drugRepository.insert(req);
+        opLog.info("新增药品: id={}, name={}, 规格={}, 单位={}", id, req.name(), req.specification(), req.stockUnit());
+        return id;
     }
 
     public void update(long id, DrugReq req) {
         validate(req);
         get(id);
         drugRepository.update(id, req);
+        opLog.info("修改药品: id={}, name={}, 规格={}, 单位={}", id, req.name(), req.specification(), req.stockUnit());
     }
 
     public void changeStatus(long id, String status) {
         get(id);
-        drugRepository.updateStatus(id, "ENABLED".equalsIgnoreCase(status) ? "ENABLED" : "DISABLED");
+        String target = "ENABLED".equalsIgnoreCase(status) ? "ENABLED" : "DISABLED";
+        drugRepository.updateStatus(id, target);
+        opLog.info("{}药品: id={}", "ENABLED".equals(target) ? "启用" : "停用", id);
     }
 
     private void validate(DrugReq req) {

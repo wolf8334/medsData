@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG_HOME" value="${user.home}/logs/medsData"/>
+    <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="APP_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/app.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>20MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>500MB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="OPERATION_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/operation.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/operation.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>20MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>500MB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="ACCESS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/access.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/access.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>20MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>500MB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 操作日志：单独的 logger 名 OPERATION，只进 operation.log -->
+    <logger name="OPERATION" level="INFO" additivity="false">
+        <appender-ref ref="OPERATION_FILE"/>
+    </logger>
+
+    <!-- 访问日志：单独的 logger 名 ACCESS，只进 access.log -->
+    <logger name="ACCESS" level="INFO" additivity="false">
+        <appender-ref ref="ACCESS_FILE"/>
+    </logger>
+
+    <!-- 其他日志：INFO 及以上进控制台和 app.log，不输出 DEBUG -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="APP_FILE"/>
+    </root>
+</configuration>

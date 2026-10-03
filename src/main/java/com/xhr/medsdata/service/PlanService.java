@@ -12,6 +12,8 @@ import com.xhr.medsdata.repository.DrugRepository;
 import com.xhr.medsdata.repository.PersonRepository;
 import com.xhr.medsdata.repository.PlanItemRepository;
 import com.xhr.medsdata.repository.PlanRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,8 @@ import java.util.Optional;
 
 @Service
 public class PlanService {
+
+    private static final Logger opLog = LoggerFactory.getLogger("OPERATION");
 
     private final PlanRepository planRepository;
     private final PlanItemRepository planItemRepository;
@@ -84,6 +88,8 @@ public class PlanService {
         long planId = planRepository.insert(req.personId(), versionNo, effectiveFrom, status, req.remark());
         planItemRepository.insertBatch(planId, req.items());
         planRepository.closeOpenPlansBefore(req.personId(), effectiveFrom, planId);
+        opLog.info("新建用药方案: personId={}, planId={}, 版本={}, 生效日期={}, 明细数={}",
+                req.personId(), planId, versionNo, effectiveFrom, req.items().size());
         return planId;
     }
 
@@ -112,6 +118,8 @@ public class PlanService {
         long planId = planRepository.insert(source.personId(), versionNo, effectiveFrom, status, remark);
         planItemRepository.insertBatch(planId, items);
         planRepository.closeOpenPlansBefore(source.personId(), effectiveFrom, planId);
+        opLog.info("基于方案创建新版本: sourcePlanId={}, personId={}, 新planId={}, 版本={}, 生效日期={}",
+                sourcePlanId, source.personId(), planId, versionNo, effectiveFrom);
         return planId;
     }
 
@@ -133,6 +141,8 @@ public class PlanService {
                 req.remark());
         planItemRepository.deleteByPlanId(planId);
         planItemRepository.insertBatch(planId, req.items());
+        opLog.info("修改待生效方案: planId={}, 生效日期={}, 明细数={}",
+                planId, req.effectiveFrom(), req.items().size());
     }
 
     public List<PlanItemView> items(long planId) {
@@ -153,6 +163,7 @@ public class PlanService {
         planItemRepository.deleteByPlanId(planId);
         planRepository.delete(planId);
         rebuildTimeline(plan.personId());
+        opLog.info("删除用药方案: planId={}, personId={}", planId, plan.personId());
     }
 
     private void rebuildTimeline(long personId) {
