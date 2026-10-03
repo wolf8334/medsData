@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>药品管理</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <span class="brand">家庭用药</span>
+    <nav class="nav">
+      <a href="/index.html">首页</a>
+      <a href="/history.html">历史</a>
+      <a href="/plans.html">用药方案</a>
+      <a href="/drugs.html" class="active">药品</a>
+      <a href="/stock.html">库存</a>
+      <a href="/persons.html">用药人</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="card">
+    <div class="row">
+      <h2>药品</h2>
+      <button id="add-btn" class="btn-primary">新增药品</button>
+    </div>
+    <datalist id="unit-list">
+      <option value="片"></option><option value="粒"></option><option value="盒"></option>
+      <option value="板"></option><option value="支"></option><option value="袋"></option>
+      <option value="ml"></option><option value="g"></option>
+    </datalist>
+    <div class="table-scroll">
+      <table id="drug-table">
+        <thead><tr><th>名称</th><th>规格</th><th>最小单位</th><th>当前库存</th><th>最低库存</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+<script src="/js/common.js"></script>
+<script src="/js/drugs.js"></script>
+</body>
+</html>

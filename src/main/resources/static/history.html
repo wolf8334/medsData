@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>历史服药记录</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <span class="brand">家庭用药</span>
+    <nav class="nav">
+      <a href="/index.html">首页</a>
+      <a href="/history.html" class="active">历史</a>
+      <a href="/plans.html">用药方案</a>
+      <a href="/drugs.html">药品</a>
+      <a href="/stock.html">库存</a>
+      <a href="/persons.html">用药人</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="card"><div id="calendar"></div></div>
+  <div class="card">
+    <div class="row">
+      <h2 id="day-title">服药情况</h2>
+      <span class="muted">绿色=已完成，黄色=部分，红色=未记录</span>
+    </div>
+    <div id="day-view" class="empty">加载中…</div>
+  </div>
+  <div class="card">
+    <h3>当日全部记录（含已撤销）</h3>
+    <div class="table-scroll"><table id="records-table">
+      <thead><tr><th>用药人</th><th>时段</th><th>状态</th><th>实际时间</th><th>方案</th><th>备注</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </div>
+</main>
+<script src="/js/common.js"></script>
+<script src="/js/dayview.js"></script>
+<script src="/js/history.js"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>用药方案</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <span class="brand">家庭用药</span>
+    <nav class="nav">
+      <a href="/index.html">首页</a>
+      <a href="/history.html">历史</a>
+      <a href="/plans.html" class="active">用药方案</a>
+      <a href="/drugs.html">药品</a>
+      <a href="/stock.html">库存</a>
+      <a href="/persons.html">用药人</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="card">
+    <div class="row">
+      <div style="min-width:220px">
+        <label>用药人</label>
+        <select id="person-select"></select>
+      </div>
+      <div>
+        <button id="new-plan-btn" class="btn-primary">新建方案</button>
+      </div>
+    </div>
+  </div>
+  <div id="current-plan"></div>
+  <div class="card">
+    <h3>历史方案</h3>
+    <div class="table-scroll">
+      <table id="plan-table">
+        <thead><tr><th>状态</th><th>生效日期</th><th>失效日期</th><th>用药明细</th><th>操作</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+<script src="/js/common.js"></script>
+<script src="/js/plans.js"></script>
+</body>
+</html>
