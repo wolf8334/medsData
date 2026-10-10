@@ -29,8 +29,10 @@ public class AccessLogFilter extends OncePerRequestFilter {
         try {
             chain.doFilter(request, response);
         } finally {
+            boolean skip = Boolean.TRUE.equals(request.getAttribute(AccessGateFilter.SKIP_LOG_ATTR))
+                    || response.getStatus() == HttpServletResponse.SC_NOT_FOUND;
             String uri = request.getRequestURI();
-            if (!isStatic(uri)) {
+            if (!skip && !isStatic(uri)) {
                 long cost = System.currentTimeMillis() - start;
                 String query = request.getQueryString();
                 log.info("{} {}{} status={} cost={}ms ip={}",
