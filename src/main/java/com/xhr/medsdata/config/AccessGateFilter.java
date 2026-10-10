@@ -62,9 +62,10 @@ public class AccessGateFilter extends OncePerRequestFilter {
         }
 
         String entryPath = normalize(entry);
+        String requestPath = normalize(request.getRequestURI());
         String expected = tokenOf(entry);
 
-        if ("GET".equalsIgnoreCase(request.getMethod()) && entryPath.equals(request.getRequestURI())) {
+        if ("GET".equalsIgnoreCase(request.getMethod()) && entryPath.equals(requestPath)) {
             request.setAttribute(SKIP_LOG_ATTR, Boolean.TRUE);
             issueCookie(request, response, expected);
             response.setStatus(HttpServletResponse.SC_FOUND);
